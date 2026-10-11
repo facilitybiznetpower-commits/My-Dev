@@ -403,13 +403,18 @@ function buildInstalasi(){
       +'<button class="dbtn" data-b="'+encodeURIComponent(t.nm)+'" onclick="openDoc(decodeURIComponent(this.dataset.b))" title="Lihat dokumentasi">📷</button></span></div>'
       +'<div class="pg-line"><div class="pbar"><i style="width:'+t.prog+'%;background:'+pbarColor(t.st)+'"></i></div><span>'+t.prog+'%</span></div></div>';
   }).join("");
-  var vPrep=VENDOR.filter(function(v){return v[2]>0}).length;
-  el("venSub").textContent="Fase 2 - Bali";
-  el("venChips").innerHTML='<span class="chip">🏙️ '+VENDOR.length+' lokasi</span><span class="chip" style="background:#dbeafe">🔵 '+vPrep+' Preparation</span>';
-  el("venList").innerHTML=VENDOR.map(function(v){
-    var st=v[2]>0?"Preparation":"Plan";
-    return '<div class="trow"><div class="trow-top"><div><div class="tname">'+esc(v[0])+'</div><div class="tmeta">'+esc(v[1])+'</div></div><span class="badge '+badgeCls(st)+'">'+st+'</span></div><div class="pg-line"><div class="pbar"><i style="width:'+v[2]+'%;background:'+pbarColor(st)+'"></i></div><span>'+v[2]+'%</span></div></div>';
-  }).join("");
+  var vDone=0,vProg=0,vPrep=0;
+VENDOR.forEach(function(v){
+  if(v[2]>=100)vDone++;
+  else if(v[2]>0)vProg++;
+  else vPrep++;
+});
+el("venSub").textContent="Fase 2 - Bali";
+el("venChips").innerHTML='<span class="chip">🏙️ '+VENDOR.length+' lokasi</span><span class="chip" style="background:#d1fae5">✅ '+vDone+' Done</span><span class="chip" style="background:#fef3c7">🔄 '+vProg+' On Progress</span><span class="chip" style="background:#dbeafe">🔵 '+vPrep+' Preparation</span>';
+el("venList").innerHTML=VENDOR.map(function(v){
+  var st=v[2]>=100?"Done":v[2]>0?"On Progress":"Preparation";
+  return '<div class="trow"><div class="trow-top"><div><div class="tname">'+esc(v[0])+'</div><div class="tmeta">'+esc(v[1])+'</div></div><span class="badge '+badgeCls(st)+'">'+st+'</span></div><div class="pg-line"><div class="pbar"><i style="width:'+v[2]+'%;background:'+pbarColor(st)+'"></i></div><span>'+v[2]+'%</span></div></div>';
+}).join("");
   var dDone=DELIVERY.filter(function(d){return d[5]==="DONE"}).length;
   el("delSub").textContent=dDone+" dari "+DELIVERY.length+" lokasi: material DONE dikirim";
   el("delBody").innerHTML=DELIVERY.map(function(d){
