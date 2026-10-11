@@ -211,6 +211,7 @@ tbody tr:hover{background:#f8fafc}
   </div>
 </main>
 </div>
+</div>
 
 <!-- Modal edit progress -->
 <div class="modal-bg" id="editModal" style="display:none">
@@ -510,7 +511,7 @@ function setStatus(type,text){
 function loadAll(){
   if(!CONFIG.webAppUrl||CONFIG.webAppUrl.indexOf("PASTE")>=0){
     setStatus("fallback","🟡 Fallback · Web App URL belum diisi");
-    el("sideFoot").innerHTML="⚠️ Isi <b>CONFIG.webAppUrl</b> dengan URL hasil Deploy Apps Script.";
+   // el("sideFoot").innerHTML="⚠️ Isi <b>CONFIG.webAppUrl</b> dengan URL hasil Deploy Apps Script.";
     return;
   }
   setStatus("loading","⏳ Memuat via Apps Script…");
@@ -539,7 +540,7 @@ function loadAll(){
     }
     if(apiErrors.length===0){
       setStatus("live","🟢 Live: Google Sheets · "+now);
-      el("sideFoot").innerHTML="Sumber: <b>Google Sheets</b> via Apps Script<br>Update: "+now;
+      //el("sideFoot").innerHTML="Sumber: <b>Google Sheets</b> via Apps Script<br>Update: "+now;
       el("errNote").style.display="none";
     }else{
       setStatus("warn","🟠 Sebagian live · "+now);
