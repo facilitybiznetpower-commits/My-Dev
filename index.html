@@ -548,6 +548,7 @@ function loadAll(){
     }
   })
   .catch(function(err){
+    console.error(err);   // ← TAMBAHKAN INI
     setStatus("fallback","🟡 Fallback · "+err.message);
     el("errNote").style.display="block";
     el("errNote").innerHTML="⚠️ Gagal menghubungi Apps Script: <b>"+esc(err.message)+"</b><br>Cek: URL webAppUrl (akhiran /exec), deployment <i>Execute as: Me</i> & <i>Access: Anyone</i>, token sama.";
