@@ -111,7 +111,7 @@ tbody tr:hover{background:#f8fafc}
     <button class="nav-item" data-tab="peta">🗺️ <span>Mapping Plan</span></button>
     <button class="nav-item" data-tab="material">📦 <span>Material & Tools</span></button>
   </nav>
-  <div class="side-foot" id="sideFoot">Sumber: <b>Apps Script Web App</b><br>Spreadsheet privat</div>
+  <div class="side-foot" id="sideFoot">Sumber: <b>Apps  Web App</b><br>Spreadsheet privat</div>
 </aside>
 <main class="main">
   <header class="topbar">
@@ -223,6 +223,16 @@ tbody tr:hover{background:#f8fafc}
     <select id="emSt"><option>Plan</option><option>Preparation</option><option>On Progress</option><option>Done</option></select>
     <div class="m-btns"><button id="emSave">💾 Simpan</button><button id="emCancel">Batal</button></div>
     <div class="m-msg" id="emMsg"></div>
+  </div>
+</div
+<!-- Modal edit View foto -->
+<div id="modalDoc" onclick="if(event.target===this)this.style.display='none'"
+     style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:99;">
+  <div style="background:#fff; max-width:600px; margin:5vh auto; padding:16px; border-radius:12px; text-align:center;">
+    <h3 id="docTitle" style="margin:0 0 10px;"></h3>
+    <img id="docImg" src="" style="width:100%; border-radius:8px;">
+    <br><button onclick="el('modalDoc').style.display='none'"
+        style="margin-top:12px; border:0; background:#f1f5f9; padding:8px 16px; border-radius:8px; cursor:pointer;">✕ Tutup</button>
   </div>
 </div>
 
@@ -390,7 +400,7 @@ function buildInstalasi(){
   el("intList").innerHTML=items.map(function(t){
     return '<div class="trow"><div class="trow-top"><div><div class="tname">'+esc(t.nm)+'</div><div class="tmeta">'+esc(t.pic)+'</div></div>'
       +'<span style="display:flex;gap:6px;align-items:center"><span class="badge '+badgeCls(t.st)+'">'+esc(t.st)+'</span>'
-      +'<button class="ebtn" data-b="'+encodeURIComponent(t.nm)+'" data-p="'+t.prog+'" data-s="'+encodeURIComponent(t.st)+'" title="Update progress">✏️</button></span></div>'
+      +'<button class="dbtn" data-b="'+encodeURIComponent(t.nm)+'" onclick="openDoc(decodeURIComponent(this.dataset.b))" title="Lihat dokumentasi">📷</button></span></div>'
       +'<div class="pg-line"><div class="pbar"><i style="width:'+t.prog+'%;background:'+pbarColor(t.st)+'"></i></div><span>'+t.prog+'%</span></div></div>';
   }).join("");
   var vPrep=VENDOR.filter(function(v){return v[2]>0}).length;
@@ -547,6 +557,26 @@ function loadAll(){
     refreshTimer=setInterval(loadAll,CONFIG.refreshMinutes*60000);
 }
 
+// Untuk View foto progress
+var FOTO = {
+  "Nganjuk":   "https://drive.google.com/file/d/1puDV4hKUvDLU62DxFQj4RyHv7vekfLRv/view?usp=sharing",
+  "Madiun":    "https://drive.google.com/file/d/1IvQ1LX9l9SzyJe5pU4ttN6322yquk5K-/view?usp=sharing",
+};
+
+function openDoc(lokasi){
+  var url = FOTO[lokasi] || "";
+  if(!url){ alert("Belum ada foto untuk " + lokasi); return; }
+
+  // kalau link Google Drive, ubah jadi link gambar langsung
+  var m = url.match(/[-\w]{25,}/);
+  if(url.indexOf("drive.google") > -1 && m) url = "https://drive.google.com/thumbnail?id=" + m[0] + "&sz=w1000";
+
+  el("docTitle").textContent = "📸 " + lokasi;
+  el("docImg").src = url;
+  el("modalDoc").style.display = "block";
+}
+
+  
 /* ============ TABS & BOOT ============ */
 var TITLES={overview:"Overview",survey:"Site Survey",instalasi:"Progress Instalasi",prpo:"PR / PO Tracking",budget:"Budget",material:"Material & Tools",peta:"Mapping Plan"};
 var chartInit={overview:initOverviewCharts,prpo:initPrpoCharts,budget:initBudgetChart,material:initToolsChart};
