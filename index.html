@@ -78,16 +78,20 @@ tbody tr:hover{background:#f8fafc}
 .mpop .st{font-weight:700}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
 .modal.show{display:flex}
-.modal .box{background:#fff;border-radius:16px;max-width:600px;width:100%;padding:20px;max-height:88vh;overflow:auto}
+.modal .box{background:#fff;border-radius:16px;max-width:880px;width:100%;padding:20px;max-height:90vh;overflow:auto}
 .modal h4{margin-bottom:4px}
 .modal .mchips{margin:8px 0 12px;display:flex;gap:6px;flex-wrap:wrap}
-.ph-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-.ph{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:10px;height:96px;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;color:#7d93ad;font-size:12px;font-weight:600;text-align:center;padding:6px;position:relative}
+.ph-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0}
+.ph{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:10px;height:200px;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;color:#7d93ad;font-size:13px;font-weight:600;text-align:center;padding:6px;position:relative}
 .ph b{color:var(--ink);font-size:12px}
 .ph.up{cursor:pointer;overflow:hidden}
 .ph.up:hover{border-color:var(--navy);background:#eef2f9}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:9px}
 .ph .rm{position:absolute;top:4px;right:4px;background:#fff;border:1px solid var(--line);border-radius:6px;width:20px;height:20px;line-height:17px;text-align:center;font-size:11px;color:#b91c1c;z-index:2}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:250;cursor:zoom-out}
+#lightbox.show{display:flex}
+#lightbox img{max-width:94vw;max-height:84vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#lightbox .lb-cap{color:#fff;margin-top:12px;font-size:14px;font-weight:700}
 #mActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .stg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 0;border-bottom:1px dashed #f1f5f9}
 .stg .sl{width:200px;font-size:12px;color:var(--muted);font-weight:700}
@@ -327,7 +331,7 @@ window.addEventListener("error",function(e){var b=document.getElementById("errba
 <footer>Dashboard monitoring — data live dari Google Spreadsheet via Apps Script • Edit progres &amp; delivery tersimpan ke spreadsheet • Foto dokumentasi tersimpan ke Google Drive • Done Live: download report PDF.</footer>
 
 <div id="toast"></div>
-
+<div id="lightbox"><img id="lbImg" alt=""/><div class="lb-cap" id="lbCap"></div></div>
 <!-- MODAL DOKUMENTASI -->
 <div class="modal" id="modal"><div class="box">
   <div style="display:flex;justify-content:space-between;align-items:start">
@@ -710,10 +714,20 @@ $("#mPhotos").addEventListener("click",function(e){
     renderPhotoSlots();
     return;
   }
-  var slotEl=e.target.closest(".ph.up");if(!slotEl)return;
-  curSlot=+slotEl.getAttribute("data-i");
+var slotEl=e.target.closest(".ph.up");if(!slotEl)return;
+  var si=+slotEl.getAttribute("data-i");
+  var ph=(PHOTOS[curKey]||{})[si];
+  if(ph&&ph.url){openLightbox(si);return;}
+  curSlot=si;
   $("#fileIn").click();
 });
+  function openLightbox(i){
+  var ph=PHOTOS[curKey][i];
+  $("#lbImg").src=ph.url;
+  $("#lbCap").textContent=PHOTO_LABELS[i]+" — "+curKey;
+  $("#lightbox").classList.add("show");
+}
+$("#lightbox").addEventListener("click",function(){$(this).classList.remove("show");});
 $("#fileIn").addEventListener("change",function(){
   var f=this.files[0];this.value="";
   if(!f||curSlot<0||!curKey)return;
